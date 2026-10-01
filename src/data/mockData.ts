@@ -6,9 +6,15 @@ export type BusArrival = {
   dotClass: string;
   deck: string;
   wab: boolean;
+  monitored?: number;
+  lat?: string;
+  lng?: string;
+  rawEstimatedArrival?: string;
 };
 
 export type BusServiceData = {
+  serviceNo: string;
+  operator: string;
   dest: string;
   destShort: string;
   freq: string;
@@ -19,159 +25,226 @@ export type BusServiceData = {
   nodes: string[];
 };
 
-export const busData: Record<string, BusServiceData> = {
-  "147": {
-    dest: "Jurong East Int ⇄ Hougang Central Int",
-    destShort: "Hougang Central Int via Chinatown / Dhoby Ghaut",
-    freq: "Headway: 6 - 9 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
+export interface LtaBusSlot {
+  OriginCode: string;
+  DestinationCode: string;
+  EstimatedArrival: string;
+  Monitored: number;
+  Latitude: string;
+  Longitude: string;
+  VisitNumber: string;
+  Load: "SEA" | "SDA" | "LSD" | "";
+  Feature: "WAB" | "";
+  Type: "SD" | "DD" | "BD" | "";
+}
+
+export interface LtaServiceItem {
+  ServiceNo: string;
+  Operator: string;
+  NextBus: LtaBusSlot;
+  NextBus2: LtaBusSlot;
+  NextBus3: LtaBusSlot;
+}
+
+export interface LtaBusArrivalResponse {
+  "odata.metadata"?: string;
+  BusStopCode: string;
+  Services: LtaServiceItem[];
+  _live?: boolean;
+}
+
+export const STOP_DIRECTORY: Record<string, { name: string; road: string; desc: string; oppCode: string; nodes: string[] }> = {
+  "03059": {
+    name: "One Raffles Quay",
     road: "Raffles Quay",
-    buses: [
-      { timing: "Arr", sub: "< 1 min", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "7", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "16", sub: "mins", load: "Limited Stdg", loadClass: "bg-[#FEF2F2] text-crowd-red", dotClass: "bg-crowd-red", deck: "SD", wab: true }
-    ],
-    nodes: ["Opp So/Sofitel (03031)", "One Raffles Quay (03059)", "The Sail (03381)", "Marina Bay Sands (03501)"]
+    desc: "Raffles Quay • Towards Fullerton / Hougang Central Int / Jurong East",
+    oppCode: "03071",
+    nodes: ["Opp So/Sofitel (03031)", "One Raffles Quay (03059)", "The Sail (03381)", "Marina Bay Sands (03501)"],
   },
-  "10": {
-    dest: "Kent Ridge Ter ⇄ Tampines Int",
-    destShort: "Tampines Int via Guillemard Rd",
-    freq: "Headway: 5 - 8 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "2", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "9", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "18", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true }
-    ],
-    nodes: ["Raffles Pl Stn Exit F (03031)", "One Raffles Quay (03059)", "The Sail (03381)", "Marina Bay Stn (03539)"]
+  "03071": {
+    name: "80 Robinson Rd",
+    road: "Robinson Rd",
+    desc: "Robinson Rd • Opposite One Raffles Quay & CPF Bldg",
+    oppCode: "03059",
+    nodes: ["Fullerton Sq (03011)", "80 Robinson Rd (03071)", "UIC Bldg (03129)", "Hub Synergy Pt (03222)"],
   },
-  "65": {
-    dest: "HarbourFront Int ⇄ Tampines Int",
-    destShort: "Tampines Int via Orchard Rd / Little India",
-    freq: "Headway: 7 - 10 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "5", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "13", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "21", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: false }
-    ],
-    nodes: ["UIC Bldg (03129)", "One Raffles Quay (03059)", "Fullerton Sq (03011)", "Clarke Quay Stn (04222)"]
+  "83139": {
+    name: "Opp Haig Rd Mkt",
+    road: "Haig Rd",
+    desc: "Haig Rd • Towards Dunman Rd / Marine Parade / Eunos",
+    oppCode: "83131",
+    nodes: ["Blk 12 Haig Rd (83129)", "Opp Haig Rd Mkt (83139)", "Dunman High Sch (83149)", "Katong Shopping Ctr (83159)"],
   },
-  "190": {
-    dest: "Kampong Bahru Ter ⇄ Choa Chu Kang Int",
-    destShort: "Choa Chu Kang Int via Stevens / Bukit Panjang",
-    freq: "Headway: 4 - 7 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "4", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "11", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "19", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true }
-    ],
-    nodes: ["Hub Synergy Pt (03222)", "One Raffles Quay (03059)", "Old Hill St Police (04223)", "Dhoby Ghaut Stn (08057)"]
+  "20251": {
+    name: "West Coast Stn Exit B",
+    road: "West Coast Rd",
+    desc: "West Coast Rd • Towards Clementi / Bukit Panjang / Boon Lay",
+    oppCode: "20259",
+    nodes: ["Blk 726 Clementi West (20241)", "West Coast Stn Exit B (20251)", "Tanglin Sec Sch (20261)", "Blk 513 West Coast (20271)"],
   },
-  "14": {
-    dest: "Bedok Int ⇄ Clementi Int",
-    destShort: "Clementi Int via Dover Rd",
-    freq: "Headway: 6 - 9 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "3", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true },
-      { timing: "12", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "20", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true }
-    ],
-    nodes: ["Suntec City (80159)", "One Raffles Quay (03059)", "Capitol Bldg (04111)", "Orchard Plaza (08137)"]
+  "03031": {
+    name: "Raffles Pl Stn Exit F",
+    road: "Robinson Rd",
+    desc: "Robinson Rd • Financial District Corridor",
+    oppCode: "03059",
+    nodes: ["Fullerton Sq (03011)", "Raffles Pl Stn Exit F (03031)", "One Raffles Quay (03059)", "The Sail (03381)"],
   },
-  "100": {
-    dest: "Serangoon Int ⇄ Ghim Moh Ter",
-    destShort: "Ghim Moh Ter via Queensway",
-    freq: "Headway: 8 - 12 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "Arr", sub: "< 1 min", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "SD", wab: true },
-      { timing: "8", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "17", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true }
-    ],
-    nodes: ["Crawford Bridge (01339)", "One Raffles Quay (03059)", "Maxwell Stn (05269)", "Alexandra Hosp (11511)"]
+  "03381": {
+    name: "The Sail",
+    road: "Marina Blvd",
+    desc: "Marina Blvd • Towards Marina Bay Sands & Bayfront",
+    oppCode: "03389",
+    nodes: ["One Raffles Quay (03059)", "The Sail (03381)", "Marina Bay Stn (03539)", "Marina Bay Sands (03501)"],
   },
-  "166": {
-    dest: "Ang Mo Kio Int ⇄ Clementi Int",
-    destShort: "Clementi Int via Alexandra Rd",
-    freq: "Headway: 7 - 11 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "6", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "14", sub: "mins", load: "Limited Stdg", loadClass: "bg-[#FEF2F2] text-crowd-red", dotClass: "bg-crowd-red", deck: "SD", wab: true },
-      { timing: "23", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true }
-    ],
-    nodes: ["Fu Lu Shou Cplx (07551)", "One Raffles Quay (03059)", "Outram Pk Stn (05069)", "Harbourfront (14141)"]
+  "03501": {
+    name: "Marina Bay Sands Theatre",
+    road: "Bayfront Ave",
+    desc: "Bayfront Ave • Outside MBS Theatre & Shops",
+    oppCode: "03509",
+    nodes: ["The Sail (03381)", "Marina Bay Sands (03501)", "Bayfront Stn Exit B (03511)", "Gardens by the Bay (03369)"],
   },
-  "174": {
-    dest: "Boon Lay Int ⇄ New Bridge Rd Ter",
-    destShort: "New Bridge Rd Ter via Orchard",
-    freq: "Headway: 8 - 12 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "Arr", sub: "< 1 min", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "10", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true },
-      { timing: "22", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true }
-    ],
-    nodes: ["Beauty World Stn (42091)", "One Raffles Quay (03059)", "Clarke Quay (04211)", "Chinatown (05049)"]
-  },
-  "502": {
-    dest: "Soon Lee Depot ⇄ Bayfront Ave (Loop)",
-    destShort: "Marina Bay / Suntec Loop",
-    freq: "Headway: 10 - 15 mins",
-    nearestStopCode: "03059",
-    nearestStopName: "One Raffles Quay",
-    road: "Raffles Quay",
-    buses: [
-      { timing: "8", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true },
-      { timing: "19", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "29", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true }
-    ],
-    nodes: ["Jurong East Int (28009)", "One Raffles Quay (03059)", "Suntec City (02151)", "Marina Bay Sands (03501)"]
-  }
 };
 
-export function getBusData(serviceNum: string, currentStopState: string = "03059"): BusServiceData {
-  const cleanNum = serviceNum.trim();
-  if (busData[cleanNum]) {
-    const data = {...busData[cleanNum]};
-    if (currentStopState !== "03059") {
-       data.nearestStopCode = currentStopState;
-       data.nearestStopName = "80 Robinson Rd";
-       data.road = "Robinson Rd";
-       data.nodes = ["Prev Transit Hub (03011)", "80 Robinson Rd (03071)", "Upcoming Stn (03129)", "Terminus (03222)"];
-    }
-    return data;
+export const INTERCHANGE_CODES: Record<string, string> = {
+  "10009": "Bukit Merah Int",
+  "45009": "Bukit Panjang Int",
+  "84009": "Bedok Int",
+  "22009": "Boon Lay Int",
+  "29009": "Clementi Int",
+  "28009": "Jurong East Int",
+  "64009": "Hougang Central Int",
+  "75009": "Tampines Int",
+  "14009": "HarbourFront Int",
+  "44009": "Choa Chu Kang Int",
+  "11379": "Kent Ridge Ter",
+  "10499": "Kampong Bahru Ter",
+  "77009": "Pasir Ris Int",
+};
+
+export const OPERATOR_NAMES: Record<string, string> = {
+  SBST: "SBS Transit",
+  SMRT: "SMRT Buses",
+  TTS: "Tower Transit",
+  GAS: "Go-Ahead SG",
+};
+
+export function mapLtaLoad(load: string): { label: string; loadClass: string; dotClass: string } {
+  switch (load) {
+    case "SEA":
+      return {
+        label: "Seats Avail",
+        loadClass: "bg-[#ECFDF5] text-crowd-green",
+        dotClass: "bg-crowd-green",
+      };
+    case "SDA":
+      return {
+        label: "Standing Avail",
+        loadClass: "bg-[#FFFBEB] text-crowd-amber",
+        dotClass: "bg-crowd-amber",
+      };
+    case "LSD":
+      return {
+        label: "Limited Stdg",
+        loadClass: "bg-[#FEF2F2] text-crowd-red",
+        dotClass: "bg-crowd-red",
+      };
+    default:
+      return {
+        label: "No Telemetry",
+        loadClass: "bg-surface-container text-text-muted",
+        dotClass: "bg-text-muted",
+      };
+  }
+}
+
+export function formatEstimatedArrival(isoString: string): { timing: string; sub: string } {
+  if (!isoString || !isoString.trim()) {
+    return { timing: "—", sub: "No Est" };
+  }
+  const target = new Date(isoString).getTime();
+  if (Number.isNaN(target)) {
+    return { timing: "—", sub: "No Est" };
+  }
+  const diffMs = target - Date.now();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins <= 0) {
+    return { timing: "Arr", sub: "< 1 min" };
   }
   return {
-    dest: "Trunk Service " + cleanNum + " (Singapore Network)",
-    destShort: "Islandwide Trunk Route",
-    freq: "Headway: 8 - 12 mins",
-    nearestStopCode: currentStopState,
-    nearestStopName: currentStopState === "03059" ? "One Raffles Quay" : "80 Robinson Rd",
-    road: currentStopState === "03059" ? "Raffles Quay" : "Robinson Rd",
-    buses: [
-      { timing: "3", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "DD", wab: true },
-      { timing: "12", sub: "mins", load: "Standing Avail", loadClass: "bg-[#FFFBEB] text-crowd-amber", dotClass: "bg-crowd-amber", deck: "DD", wab: true },
-      { timing: "22", sub: "mins", load: "Seats Avail", loadClass: "bg-[#ECFDF5] text-crowd-green", dotClass: "bg-crowd-green", deck: "SD", wab: true }
+    timing: String(diffMins),
+    sub: diffMins === 1 ? "min" : "mins",
+  };
+}
+
+export function transformLtaSlot(slot?: LtaBusSlot): BusArrival {
+  if (!slot || !slot.EstimatedArrival) {
+    return {
+      timing: "—",
+      sub: "No Est",
+      load: "Not Operating",
+      loadClass: "bg-surface-container text-text-muted",
+      dotClass: "bg-text-muted",
+      deck: slot?.Type || "SD",
+      wab: false,
+      monitored: 0,
+    };
+  }
+  const { timing, sub } = formatEstimatedArrival(slot.EstimatedArrival);
+  const { label, loadClass, dotClass } = mapLtaLoad(slot.Load);
+
+  return {
+    timing,
+    sub,
+    load: label,
+    loadClass,
+    dotClass,
+    deck: slot.Type || "SD",
+    wab: slot.Feature === "WAB",
+    monitored: slot.Monitored,
+    lat: slot.Latitude,
+    lng: slot.Longitude,
+    rawEstimatedArrival: slot.EstimatedArrival,
+  };
+}
+
+export function transformLtaServiceToUi(
+  item: LtaServiceItem,
+  busStopCode: string
+): BusServiceData {
+  const stopMeta = STOP_DIRECTORY[busStopCode] || {
+    name: `Bus Stop ${busStopCode}`,
+    road: "Singapore Transit Corridor",
+    desc: `LTA Bus Stop Code ${busStopCode}`,
+    oppCode: "03059",
+    nodes: [
+      `Prior Stop`,
+      `Stop ${busStopCode} (${busStopCode})`,
+      `Next Stop`,
+      `Terminus`,
     ],
-    nodes: ["Prev Transit Hub (03031)", currentStopState === "03059" ? "One Raffles Quay (03059)" : "80 Robinson Rd (03071)", "Upcoming Stn (03381)", "Terminus (03501)"]
+  };
+
+  const originCode = item.NextBus?.OriginCode || "";
+  const destCode = item.NextBus?.DestinationCode || "";
+  const originName = INTERCHANGE_CODES[originCode] || (originCode ? `Stop ${originCode}` : "Origin Int");
+  const destName = INTERCHANGE_CODES[destCode] || (destCode ? `Stop ${destCode}` : "Destination Int");
+
+  const operatorLabel = OPERATOR_NAMES[item.Operator] || item.Operator || "SBS Transit";
+
+  return {
+    serviceNo: item.ServiceNo,
+    operator: operatorLabel,
+    dest: `${originName} ⇄ ${destName}`,
+    destShort: `${destName} (from ${originName})`,
+    freq: `${operatorLabel} • Origin ${originCode || "—"} → Dest ${destCode || "—"}`,
+    nearestStopCode: busStopCode,
+    nearestStopName: stopMeta.name,
+    road: stopMeta.road,
+    buses: [
+      transformLtaSlot(item.NextBus),
+      transformLtaSlot(item.NextBus2),
+      transformLtaSlot(item.NextBus3),
+    ],
+    nodes: stopMeta.nodes,
   };
 }
