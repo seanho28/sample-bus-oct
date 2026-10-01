@@ -1,0 +1,8 @@
+{
+  "name": "ProtoSketch",
+  "description": "Rapidly build interactive app prototypes by hotlinking images directly from your HTML files.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

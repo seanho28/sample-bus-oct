@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-sbs-purple-light: #7B1FA2;
+  --color-surface-container: #e5eeff;
+  --color-tertiary-fixed-dim: #bcc7de;
+  --color-on-secondary-fixed: #341000;
+  --color-background: #f8f9ff;
+  --color-error: #ba1a1a;
+  --color-card-bg: #FFFFFF;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-tint: #8d3e96;
+  --color-tertiary: #212c3e;
+  --color-crowd-red: #EF4444;
+  --color-tertiary-fixed: #d8e3fb;
+  --color-on-primary: #ffffff;
+  --color-secondary: #a04100;
+  --color-primary-fixed-dim: #fbaaff;
+  --color-secondary-fixed: #ffdbcb;
+  --color-text-muted: #64748B;
+  --color-primary-fixed: #ffd6fd;
+  --color-border-subtle: #E2E8F0;
+  --color-primary: #4f005b;
+  --color-surface: #f8f9ff;
+  --color-inverse-primary: #fbaaff;
+  --color-outline: #81737f;
+  --color-surface-bg: #F8FAFC;
+  --color-sbs-orange-bright: #FF7A00;
+  --color-surface-variant: #d3e4fe;
+  --color-primary-container: #6b1d76;
+  --color-error-container: #ffdad6;
+  --color-text-primary: #0F172A;
+  --color-on-primary-fixed-variant: #71247c;
+  --color-on-tertiary: #ffffff;
+  --color-on-background: #0b1c30;
+  --color-crowd-amber: #F59E0B;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-on-secondary-fixed-variant: #7a3000;
+  --color-surface-dim: #cbdbf5;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface-variant: #4f434e;
+  --color-surface-container-highest: #d3e4fe;
+  --color-tertiary-container: #374255;
+  --color-on-surface: #0b1c30;
+  --color-on-tertiary-fixed: #111c2d;
+  --color-on-tertiary-container: #a3aec5;
+  --color-on-error: #ffffff;
+  --color-secondary-container: #fc7728;
+  --color-on-primary-container: #e68dec;
+  --color-surface-container-high: #dce9ff;
+  --color-on-tertiary-fixed-variant: #3c475a;
+  --color-on-error-container: #93000a;
+  --color-on-secondary: #ffffff;
+  --color-secondary-fixed-dim: #ffb693;
+  --color-sbs-purple-dark: #591E60;
+  --color-outline-variant: #d3c1cf;
+  --color-inverse-surface: #213145;
+  --color-on-primary-fixed: #36003e;
+  --color-crowd-green: #10B981;
+  --color-on-secondary-container: #5d2300;
+
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-margin: 2rem;
+
+  --font-headline-sm: "Inter", sans-serif;
+  --font-headline-md: "Inter", sans-serif;
+  --font-label-md: "Inter", sans-serif;
+  --font-headline-lg-mobile: "Inter", sans-serif;
+  --font-label-badge: "Inter", sans-serif;
+  --font-display-hero: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-timing-huge: "Inter", sans-serif;
+  --font-headline-lg: "Inter", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-body-sm: "Inter", sans-serif;
+  
+  --text-headline-sm: 18px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-headline-md: 22px;
+  --text-headline-md--line-height: 28px;
+  --text-headline-md--font-weight: 600;
+
+  --text-label-md: 13px;
+  --text-label-md--line-height: 18px;
+  --text-label-md--letter-spacing: 0.01em;
+  --text-label-md--font-weight: 600;
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--letter-spacing: -0.01em;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-label-badge: 11px;
+  --text-label-badge--line-height: 14px;
+  --text-label-badge--letter-spacing: 0.04em;
+  --text-label-badge--font-weight: 700;
+
+  --text-display-hero: 40px;
+  --text-display-hero--line-height: 48px;
+  --text-display-hero--letter-spacing: -0.02em;
+  --text-display-hero--font-weight: 800;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+
+  --text-timing-huge: 36px;
+  --text-timing-huge--line-height: 40px;
+  --text-timing-huge--letter-spacing: -0.03em;
+  --text-timing-huge--font-weight: 800;
+
+  --text-headline-lg: 30px;
+  --text-headline-lg--line-height: 38px;
+  --text-headline-lg--letter-spacing: -0.015em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-sm: 12px;
+  --text-body-sm--line-height: 16px;
+  --text-body-sm--font-weight: 400;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    overscroll-behavior: none;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+  }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+
+::-webkit-scrollbar { display: none; }
